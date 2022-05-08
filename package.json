@@ -1,0 +1,43 @@
+{
+  "name": "crypto_accounting_book",
+  "version": "1.0.0",
+  "description": "Simple accounting book application used to manage all records from trading",
+  "main": "src/server.ts",
+  "scripts": {
+    "dev": "ts-node-dev --respawn src/server.ts",
+    "build": "prettier --write src/server.ts && tsc",
+    "start-prod": "node dist/src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sajmon2325/crypto_accounting_book.git"
+  },
+  "keywords": [
+    "crypto",
+    "accounting_book"
+  ],
+  "author": "Simon P.",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/mongodb": "^4.0.7",
+    "@types/body-parser": "^1.19.2",
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.13",
+    "@types/node": "^17.0.21",
+    "@types/uuid": "^8.3.4",
+    "prettier": "^2.5.1"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.2",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "mongodb": "^4.5.0",
+    "ts-node-dev": "^1.1.8",
+    "uuid": "^8.3.2",
+    "winston": "^3.6.0"
+  },
+  "bugs": {
+    "url": "https://github.com/sajmon2325/crypto_accounting_book/issues"
+  },
+  "homepage": "https://github.com/sajmon2325/crypto_accounting_book#readme"
+}
