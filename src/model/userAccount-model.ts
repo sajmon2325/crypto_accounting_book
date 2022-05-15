@@ -1,4 +1,4 @@
-export interface UserAttributes {
+export interface UserAccountAttributes {
     username: string;
     password: string;
     email: string;
@@ -6,7 +6,7 @@ export interface UserAttributes {
     accountingRecordId?: string;
 }
 
-export class User implements UserAttributes {
+export class UserAccount implements UserAccountAttributes {
     username: string;
     password: string;
     email: string;
