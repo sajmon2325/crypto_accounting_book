@@ -1,3 +1,11 @@
+export type UserAccountFilerOptions = {
+    username?: string;
+    password?: string;
+    email?: string;
+    country?: string;
+    accountingRecordId?: string;
+};
+
 export interface BaseRepositoryOperations<T> {
 
     createRecord ( item: T ): Promise<T>;
@@ -10,7 +18,7 @@ export interface BaseRepositoryOperations<T> {
 
     findAllRecords (): Promise<T[]>;
 
-    findRecordsByFilter ( filter: T ): Promise<T[]>;
+    findRecordsByFilter ( filter: UserAccountFilerOptions ): Promise<T[]>;
 
     countRecordsInCollection (): Promise<number>;
 }
