@@ -43,7 +43,7 @@ export class UserAccountRepository implements BaseRepositoryOperations<UserAccou
     delete = async ( accountId: string ): Promise<string> => {
         try {
             const accountCollection: Collection = await connectToDb( this.collection );
-            const existingUserAccount = await accountCollection.findOne<UserAccount>( { $where: { _id: new ObjectId( accountId ) } } )
+            const existingUserAccount = await accountCollection.findOne<UserAccount>( { $where: { _id: new ObjectId( accountId ) } } );
             if ( existingUserAccount ) {
                 await accountCollection.deleteOne( { $where: { _id: new ObjectId( accountId ) } } );
                 logger.info( `Successfully deleted record with id: ${ accountId }` );
@@ -72,7 +72,7 @@ export class UserAccountRepository implements BaseRepositoryOperations<UserAccou
                 throw new Error( e.message );
             }
         }
-        return Promise.reject( 'Failed to find all account records from database' );
+        return Promise.reject( 'Failed to find all user account records from database' );
     }
 
     findOneRecord = async ( accountId: string ): Promise<UserAccount> => {
@@ -108,7 +108,7 @@ export class UserAccountRepository implements BaseRepositoryOperations<UserAccou
                 throw new Error( e.message );
             }
         }
-        return Promise.reject( 'Failed to find record by specified filter' );
+        return Promise.reject( 'Failed to find records by specified filter' );
     }
 
     updateRecord = async ( accountId: string, update: UserAccount ): Promise<UserAccount> => {
