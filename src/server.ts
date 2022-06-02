@@ -5,6 +5,7 @@ import logger from './loggers/logger';
 
 import loginRouter from './routes/auth-routes';
 import userAccountRouter from './routes/user-account-routes';
+import accountingRecordRouter from './routes/accounting-record-routes';
 
 const app = express();
 const port = config.server.port;
@@ -19,6 +20,7 @@ app.get( '/', ( req: Request, res: Response ) => {
 
 app.use('/api/auth', loginRouter );
 app.use('/api/userAccount', userAccountRouter);
+app.use('/api/accountingRecord', accountingRecordRouter);
 
 app.listen( port, async () => {
     logger.info( `Server is listening on port ${ port }` );
