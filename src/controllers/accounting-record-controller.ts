@@ -7,7 +7,7 @@ import { AccrountingRecordFilterOptions } from '../repository/base-repository-op
 const recordRepository = new AccountingRecordRepository();
 
 export const countAccountingRecords = async (req: Request, res: Response) => {
-    const allRecords = await recordRepository.countAccountingRecords();
+    const allRecords = await recordRepository.countRecordsInCollection();
     if (!allRecords) {
         logger.error(`Failed to count all accounting records: ${allRecords}`);
         return res.status(500).json({ message: 'Error when counting accounting records' });
@@ -85,7 +85,7 @@ export const updateAccountingRecord = async ( req: Request, res: Response ) => {
 export const deleteAccountingRecord = async ( req: Request, res: Response ) => {
     const recordId = req.body.recordId;
 
-    const deletedRecordId = await recordRepository.deleteRecord(recordId);
+    const deletedRecordId = await recordRepository.delete(recordId);
     if (!deletedRecordId) {
         logger.error(`Failed to delete accounting record with id: ${recordId}`);
         return res.status(500).json({ message: 'Failed to delete accounting record' });
