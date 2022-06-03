@@ -2,7 +2,8 @@ import { UserAccount } from '../model/userAccount-model';
 import logger from '../loggers/logger';
 import { connectToDb } from '../database/db-connection';
 import { BaseRepositoryOperations, UserAccountFilerOptions } from './base-repository-operations';
-import { Collection, ObjectId } from 'mongodb';
+import { Collection, Filter, FindOneAndUpdateOptions, MatchKeysAndValues, ObjectId, UpdateFilter } from 'mongodb';
+import { json } from 'body-parser';
 
 export class UserAccountRepository implements BaseRepositoryOperations<UserAccount> {
 
@@ -26,7 +27,8 @@ export class UserAccountRepository implements BaseRepositoryOperations<UserAccou
         try {
             const accountsCollection: Collection = await connectToDb( this.collection );
             const createdUserAccountId = await accountsCollection.insertOne( userAccount );
-            const createdUserAccount = await accountsCollection.findOne<UserAccount>( { $where: { _id: createdUserAccountId.insertedId } } );
+            const createdUserAccount = await accountsCollection.findOne<UserAccount>( { _id: createdUserAccountId.insertedId } );
+            logger.debug(`createdUserAccountId.insertedId: ${JSON.stringify(createdUserAccountId.insertedId)}`);
             if ( createdUserAccount ) {
                 logger.info( `Successfully created user account with id: ${ createdUserAccountId.insertedId }` );
                 return createdUserAccount;
@@ -37,15 +39,16 @@ export class UserAccountRepository implements BaseRepositoryOperations<UserAccou
                 throw new Error( e.message );
             }
         }
-        return Promise.reject( 'Failed to create new user account account' );
+        return Promise.reject( 'Failed to create new user account' );
     }
 
     delete = async ( accountId: string ): Promise<string> => {
         try {
             const accountCollection: Collection = await connectToDb( this.collection );
-            const existingUserAccount = await accountCollection.findOne<UserAccount>( { $where: { _id: new ObjectId( accountId ) } } );
+            const existingUserAccount = await accountCollection.findOne<UserAccount>( { _id: new ObjectId(accountId) } );
+            logger.debug(`existingUserAccount ${existingUserAccount}`)
             if ( existingUserAccount ) {
-                await accountCollection.deleteOne( { $where: { _id: new ObjectId( accountId ) } } );
+                await accountCollection.deleteOne( { _id: new ObjectId(accountId) } );
                 logger.info( `Successfully deleted record with id: ${ accountId }` );
                 return accountId;
             }
@@ -78,11 +81,18 @@ export class UserAccountRepository implements BaseRepositoryOperations<UserAccou
     findOneRecord = async ( accountId: string ): Promise<UserAccount> => {
         try {
             const accountsCollection: Collection = await connectToDb( this.collection );
-            const foundUserAccount = await accountsCollection.findOne<UserAccount>( { $where: { _id: new ObjectId( accountId ) } } );
+            const foundUserAccount = await accountsCollection.findOne<UserAccount>( { _id: new ObjectId(accountId) } );
+            logger.debug(`accountId: ${accountId}`);
+            logger.debug(`foundUserAccount: ${foundUserAccount}`);
 
             if ( foundUserAccount ) {
                 logger.info( `Successfully found user account with id: ${ accountId }` );
                 return foundUserAccount;
+            }
+
+            if ( !foundUserAccount ) {
+                logger.info(`Record with accountId: ${accountId} was not found`);
+                return {} as UserAccount;
             }
         } catch ( e ) {
             if ( e instanceof Error ) {
@@ -115,11 +125,16 @@ export class UserAccountRepository implements BaseRepositoryOperations<UserAccou
         try {
             const accountsCollection: Collection = await connectToDb( this.collection );
             if ( update ) {
-                const updatedUserAccount = await accountsCollection.findOneAndUpdate( { $where: { _id: new ObjectId( accountId ) } }, { $set: update }, { returnDocument: 'after' } );
-                if ( updatedUserAccount ) {
-                    const userAccount: UserAccount = ( <UserAccount> updatedUserAccount.lastErrorObject );
+                const filterOption = { _id: new ObjectId(accountId) } as Filter<UserAccount>;
+                const updateOption = { $set: update as  MatchKeysAndValues<UserAccount> };
+                const options = { returnDocument: 'after' } as FindOneAndUpdateOptions;
+
+                await accountsCollection.findOneAndUpdate( filterOption, updateOption, options );
+                const updatedUserAccount = await accountsCollection.findOne<UserAccount>({_id: new ObjectId(accountId)});
+
+                if (  updatedUserAccount ) {
                     logger.info( `Successfully updated record with id: ${ accountId }` );
-                    return userAccount;
+                    return updatedUserAccount;
                 }
             }
         } catch ( e ) {

@@ -19,7 +19,7 @@ export const countUserAccounts = async (req: Request, res: Response) => {
 
 export const createUserAccount = async (req: Request, res: Response) => {
     const userAccToCreate: UserAccountAttributes = req.body.userAccount;
-    
+
     const createdUserAccount: UserAccount = await userAccountRepository.createRecord(userAccToCreate);
     if (!createdUserAccount) {
         logger.error(`Failed to create new user account with username: ${userAccToCreate.username}`);
@@ -31,7 +31,8 @@ export const createUserAccount = async (req: Request, res: Response) => {
 };
 
 export const deleteUserAccount = async (req: Request, res: Response) => {
-    const userAccountId = req.body.accountId;
+    const userAccountId = req.params.accountId;
+    logger.debug(`userAccountId: ${userAccountId}`);
 
     const deletedAccountId = await userAccountRepository.delete(userAccountId);
     if (!deletedAccountId) {
@@ -56,7 +57,8 @@ export const getAllUserAccounts = async (req: Request, res: Response) => {
 };
 
 export const getUserAccount = async (req: Request, res: Response) => {
-    const accountId = req.body.accountId;
+    const accountId = req.params.accountId;
+    logger.debug(`accountId: ${accountId}`);
 
     const userAccount: UserAccount = await userAccountRepository.findOneRecord(accountId);
     if (!userAccount) {
@@ -64,12 +66,17 @@ export const getUserAccount = async (req: Request, res: Response) => {
         return res.status(500).json({ message: `Failed to fetch user account with id: ${accountId}` });
     }
 
+    if (Object.keys(userAccount).length === 0) {
+        logger.error(`Record with accountId: ${accountId} was not found`);
+        return res.status(404).json({ message: `Record with accountId: ${accountId} was not found` });
+    }
+    
     logger.info(`Successfully fetched user account with username: ${userAccount.username}`);
     return res.status(200).json({ userAccount: userAccount, message: `Successfully fetched user account with username: ${userAccount.username}` });
 };
 
 export const getUserAccountByFilter = async (req: Request, res: Response) => {
-    const filter: UserAccountFilerOptions = req.body.filer;
+    const filter: UserAccountFilerOptions = req.body.filter;
 
     const userAccounts: UserAccount[] = await userAccountRepository.findRecordsByFilter(filter);
     if (!userAccounts) {
@@ -82,9 +89,9 @@ export const getUserAccountByFilter = async (req: Request, res: Response) => {
 };
 
 export const updateUserAccount = async (req: Request, res: Response) => {
-    const accountId = req.body.accountId;
-    const update: UserAccount = req.body.userAccount;
-
+    const accountId = req.params.accountId;
+    const update: UserAccount = req.body.update;
+    
     const updatedUserAccount: UserAccount = await userAccountRepository.updateRecord(accountId, update);
     if (!updatedUserAccount) {
         logger.error('Failed to update user account');

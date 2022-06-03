@@ -1,5 +1,4 @@
 export interface UserAccountAttributes {
-    id?: string;
     username: string;
     password: string;
     email: string;
@@ -8,20 +7,16 @@ export interface UserAccountAttributes {
 }
 
 export class UserAccount implements UserAccountAttributes {
-    id?: string;
     username: string;
     password: string;
     email: string;
     country?: string;
     accountingRecordId?: string
 
-    constructor ( username: string, password: string, email: string, country?: string, accountingRecordId?: string, id?: string ) {
+    constructor ( username: string, password: string, email: string, country?: string, accountingRecordId?: string, ) {
         this.username = username;
         this.password = password;
         this.email = email;
-        if ( id ) {
-            this.id = id;
-        }
         if ( country ) {
             this.country = country;
         }
