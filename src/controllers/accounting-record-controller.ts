@@ -43,7 +43,7 @@ export const getAccountingRecord = async ( req: Request, res: Response ) => {
 };
 
 export const getAccountingRecords = async ( req: Request, res: Response ) => {
-    const recordId = req.body.recordId;
+    const recordId = req.params.recordId;
 
     const record: AccountingRecord = await recordRepository.findOneRecord(recordId);
     if (!record) {
@@ -51,8 +51,8 @@ export const getAccountingRecords = async ( req: Request, res: Response ) => {
         return res.status(500).json(`Failed to fetch accounting record with id: ${recordId}`);
     }
 
-    logger.info(`Successfully fetched accounting record with id: ${record.id}`);
-    return res.status(200).json({ accountingRecord: record, message: `Successfully fetched accounting record with id: ${record.id}` });
+    logger.info(`Successfully fetched accounting record with id: ${recordId}`);
+    return res.status(200).json({ accountingRecord: record, message: `Successfully fetched accounting record with id: ${recordId}` });
 };
 
 export const getAccountingRecordsByFilter = async ( req: Request, res: Response ) => {
@@ -69,7 +69,7 @@ export const getAccountingRecordsByFilter = async ( req: Request, res: Response 
 };
 
 export const updateAccountingRecord = async ( req: Request, res: Response ) => {
-    const recordId = req.body.recordId;
+    const recordId = req.params.recordId;
     const update: AccountingRecord = req.body.record;
 
     const updatedRecord: AccountingRecord = await recordRepository.updateRecord(recordId, update);
@@ -78,12 +78,12 @@ export const updateAccountingRecord = async ( req: Request, res: Response ) => {
         return res.status(500).json({ message: 'Failed to update accounting record' });
     }
 
-    logger.info(`Successfully updated accounting record with id: ${updatedRecord.id}`);
-    return res.status(200).json({ updatedRecord: updatedRecord, message: `Successfully updated accounting record with id: ${updatedRecord.id}` });
+    logger.info(`Successfully updated accounting record with id: ${recordId}`);
+    return res.status(200).json({ updatedRecord: updatedRecord, message: `Successfully updated accounting record with id: ${recordId}` });
 };
 
 export const deleteAccountingRecord = async ( req: Request, res: Response ) => {
-    const recordId = req.body.recordId;
+    const recordId = req.params.recordId;
 
     const deletedRecordId = await recordRepository.delete(recordId);
     if (!deletedRecordId) {

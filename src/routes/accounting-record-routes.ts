@@ -16,7 +16,7 @@ router.post('/create', createAccountingRecord);
 router.delete('/:id', deleteAccountingRecord);
 router.get('/all', getAccountingRecords);
 router.get('/:id', getAccountingRecord);
-router.get('/filter', getAccountingRecordsByFilter);
+router.post('/filter', getAccountingRecordsByFilter);
 router.put('/:id', updateAccountingRecord);
 
 export default router;

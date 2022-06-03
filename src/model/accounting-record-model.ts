@@ -3,7 +3,6 @@ import { SupportedCryptoExchanges } from './enums/supported-crypto-exchanges';
 import { SupportedFiatCurrencies } from './enums/supported-fiat-currencies';
 
 export interface AccountingRecordAttributes {
-    id?: string;
     coinType: SupportedCoins;
     boughtAt: Date;
     soldAt: Date | null;
@@ -20,7 +19,6 @@ export interface AccountingRecordAttributes {
 }
 
 export class AccountingRecord implements AccountingRecordAttributes {
-    id?: string;
     coinType: SupportedCoins;
     boughtAt: Date;
     soldAt: Date | null;
@@ -41,11 +39,8 @@ export class AccountingRecord implements AccountingRecordAttributes {
                   amount: number, soldAmount: number | null,
                   purchasingPrice: number, sellingPrice: number | null,
                   cryptoExchangeName: SupportedCryptoExchanges, transactionFiatCurrency: SupportedFiatCurrencies,
-                  cryptoExchangeFee: number | null, transactionFee: number | null, createdBy: string, userId: string, id?: string ) {
+                  cryptoExchangeFee: number | null, transactionFee: number | null, createdBy: string, userId: string ) {
 
-        if ( id ) {
-            this.id = id;
-        }
         this.coinType = coinType;
         this.boughtAt = boughtAt;
         this.soldAt = soldAt;
