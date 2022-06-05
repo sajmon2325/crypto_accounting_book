@@ -8,11 +8,6 @@ const userAccountRepository = new UserAccountRepository();
 
 export const countUserAccounts = async (req: Request, res: Response) => { 
     const allUserAccounts = await userAccountRepository.countRecordsInCollection();
-    if (!allUserAccounts) {
-        logger.error(`Failed to count all user account: ${allUserAccounts}`);
-        return res.status(500).json({ message: 'Error when counting user accounts' });
-    }
-
     logger.info(`Number of all user accounts in db: ${allUserAccounts}`);
     return res.status(200).json({ count: allUserAccounts, message: 'Successfully feteched count of all user accounts' });
 };
