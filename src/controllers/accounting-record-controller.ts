@@ -8,11 +8,6 @@ const recordRepository = new AccountingRecordRepository();
 
 export const countAccountingRecords = async (req: Request, res: Response) => {
     const allRecords = await recordRepository.countRecordsInCollection();
-    if (!allRecords) {
-        logger.error(`Failed to count all accounting records: ${allRecords}`);
-        return res.status(500).json({ message: 'Error when counting accounting records' });
-    }
-
     logger.info(`Number of all accounting records in db: ${allRecords}`);
     return res.status(200).json({ count: allRecords, message: 'Successfully feteched count of all accounting records' });
 };
@@ -30,7 +25,7 @@ export const createAccountingRecord = async ( req: Request, res: Response ) => {
     return res.status(200).json({ createdRecord: createdRecord, message: 'Successfully created new accounting record' });
 };
 
-export const getAccountingRecord = async ( req: Request, res: Response ) => {
+export const getAllAccountingRecords = async ( req: Request, res: Response ) => {
     const accountingRecords: AccountingRecord[] = await recordRepository.findAllRecords();
 
     if (!accountingRecords) {
@@ -42,7 +37,7 @@ export const getAccountingRecord = async ( req: Request, res: Response ) => {
     return res.status(200).json({ accountingRecords: accountingRecords, message: 'Successfully fetched all accounting records' });
 };
 
-export const getAccountingRecords = async ( req: Request, res: Response ) => {
+export const getAccountingRecord = async ( req: Request, res: Response ) => {
     const recordId = req.params.recordId;
 
     const record: AccountingRecord = await recordRepository.findOneRecord(recordId);
@@ -70,7 +65,7 @@ export const getAccountingRecordsByFilter = async ( req: Request, res: Response 
 
 export const updateAccountingRecord = async ( req: Request, res: Response ) => {
     const recordId = req.params.recordId;
-    const update: AccountingRecord = req.body.record;
+    const update: AccountingRecord = req.body.update;
 
     const updatedRecord: AccountingRecord = await recordRepository.updateRecord(recordId, update);
     if (!updatedRecord) {

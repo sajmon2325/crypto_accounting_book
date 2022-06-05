@@ -2,8 +2,8 @@ import express from 'express';
 import {
     countAccountingRecords,
     createAccountingRecord,
+    getAllAccountingRecords,
     getAccountingRecord,
-    getAccountingRecords,
     getAccountingRecordsByFilter,
     updateAccountingRecord,
     deleteAccountingRecord
@@ -13,10 +13,10 @@ const router = express.Router();
 
 router.get('/count', countAccountingRecords);
 router.post('/create', createAccountingRecord);
-router.delete('/:id', deleteAccountingRecord);
-router.get('/all', getAccountingRecords);
-router.get('/:id', getAccountingRecord);
+router.delete('/:recordId', deleteAccountingRecord);
+router.get('/all', getAllAccountingRecords); 
+router.get('/:recordId', getAccountingRecord);
 router.post('/filter', getAccountingRecordsByFilter);
-router.put('/:id', updateAccountingRecord);
+router.put('/:recordId', updateAccountingRecord);
 
 export default router;

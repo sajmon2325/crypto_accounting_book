@@ -1,4 +1,4 @@
-import { Collection, ObjectId } from "mongodb";
+import { Collection, Filter, FindOneAndUpdateOptions, MatchKeysAndValues, ObjectId } from "mongodb";
 import { connectToDb } from "../database/db-connection";
 import logger from "../loggers/logger";
 import { AccountingRecord } from "../model/accounting-record-model";
@@ -6,7 +6,7 @@ import { AccrountingRecordFilterOptions, BaseRepositoryOperations, UserAccountFi
 
 export class AccountingRecordRepository implements BaseRepositoryOperations<AccountingRecord> {
 
-    private collection = 'accounting_records';
+    private collection = 'acounting_records';
 
     countRecordsInCollection = async (): Promise<number> => {
         try {
@@ -43,9 +43,9 @@ export class AccountingRecordRepository implements BaseRepositoryOperations<Acco
     delete = async (recordId: string): Promise<string> =>  {
         try {
             const recordsCollection: Collection = await connectToDb(this.collection);
-            const existingAccountingRecord = await recordsCollection.findOne<AccountingRecord>( { _id: recordId } );
+            const existingAccountingRecord = await recordsCollection.findOne<AccountingRecord>( { _id: new ObjectId(recordId) } );
             if ( existingAccountingRecord ) {
-                await recordsCollection.deleteOne( { _id: recordId } );
+                await recordsCollection.deleteOne( { _id: new ObjectId(recordId) } );
                 logger.info(`Successfully deleted record with id: ${recordId}`);
                 return recordId;
             }
@@ -78,7 +78,7 @@ export class AccountingRecordRepository implements BaseRepositoryOperations<Acco
     findOneRecord = async (recordId: string): Promise<AccountingRecord> => {
         try {
             const recordsCollection: Collection = await connectToDb(this.collection);
-            const foundAccountingRecord = await recordsCollection.findOne<AccountingRecord>( { _id: recordId } );
+            const foundAccountingRecord = await recordsCollection.findOne<AccountingRecord>( { _id: new ObjectId(recordId) } );
             if ( foundAccountingRecord ) {
                 logger.info(`Successfully found accounting record with id: ${recordId}`);
                 return foundAccountingRecord;
@@ -113,11 +113,15 @@ export class AccountingRecordRepository implements BaseRepositoryOperations<Acco
         try {
             const recordsCollection: Collection = await connectToDb(this.collection);
             if ( update ) {
-                const updatedAccountingRecord = await recordsCollection.findOneAndUpdate( { _id: recordId }, { $set: update }, { returnDocument: 'after' } );
-                if ( updatedAccountingRecord ) {
-                    const accountingRecord: AccountingRecord = ( <AccountingRecord> updatedAccountingRecord.lastErrorObject );
+                const filterOption = { _id: new ObjectId(recordId) } as Filter<AccountingRecord>;
+                const updateOptions = { $set: update as MatchKeysAndValues<AccountingRecord> };
+                const options = { returnDocument: 'after' } as FindOneAndUpdateOptions;
+
+                await recordsCollection.findOneAndUpdate( filterOption, updateOptions, options );
+                const updatedRecord = await recordsCollection.findOne<AccountingRecord>({ _id: new ObjectId(recordId) });
+                if ( updatedRecord ) {
                     logger.info(`Successfully updated accounting record with id: ${recordId}`);
-                    return accountingRecord;
+                    return updatedRecord;
                 }
             }
         } catch ( e ) {

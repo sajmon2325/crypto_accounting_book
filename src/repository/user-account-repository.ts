@@ -3,7 +3,6 @@ import logger from '../loggers/logger';
 import { connectToDb } from '../database/db-connection';
 import { BaseRepositoryOperations, UserAccountFilerOptions } from './base-repository-operations';
 import { Collection, Filter, FindOneAndUpdateOptions, MatchKeysAndValues, ObjectId, UpdateFilter } from 'mongodb';
-import { json } from 'body-parser';
 
 export class UserAccountRepository implements BaseRepositoryOperations<UserAccount> {
 
@@ -28,7 +27,6 @@ export class UserAccountRepository implements BaseRepositoryOperations<UserAccou
             const accountsCollection: Collection = await connectToDb( this.collection );
             const createdUserAccountId = await accountsCollection.insertOne( userAccount );
             const createdUserAccount = await accountsCollection.findOne<UserAccount>( { _id: createdUserAccountId.insertedId } );
-            logger.debug(`createdUserAccountId.insertedId: ${JSON.stringify(createdUserAccountId.insertedId)}`);
             if ( createdUserAccount ) {
                 logger.info( `Successfully created user account with id: ${ createdUserAccountId.insertedId }` );
                 return createdUserAccount;
