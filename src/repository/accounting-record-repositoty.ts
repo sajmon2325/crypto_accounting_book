@@ -6,7 +6,7 @@ import { AccrountingRecordFilterOptions, BaseRepositoryOperations, UserAccountFi
 
 export class AccountingRecordRepository implements BaseRepositoryOperations<AccountingRecord> {
 
-    private collection = 'acounting_records';
+    private collection = 'accounting_records';
 
     countRecordsInCollection = async (): Promise<number> => {
         try {
