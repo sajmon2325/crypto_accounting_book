@@ -1,12 +1,13 @@
 import { JSONSchemaType } from 'ajv';
 
-interface UserSchema {
+export interface UserSchema {
     username: string;
     password: string;
     email: string;
     country?: string;
     accountingRecordId?: string;
 }
+
 
 export const userSchemaValidation: JSONSchemaType<UserSchema> = {
     type: 'object',
