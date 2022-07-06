@@ -8,15 +8,23 @@ import {
     updateAccountingRecord,
     deleteAccountingRecord
 } from '../controllers/accounting-record-controller';
+import { reqAccountingRecordValidation } from '../validation/accounting-record-validation';
+import { accountingRecordSchemaValidation } from '../validation/schemas/accounting-record-schema';
+import { reqAccountingRecordIdValidation } from '../validation/accounting-record-id-validation';
+import { idSchemaValidation } from '../validation/schemas/id-schema';
+import { accountingRecordFilterSchemaValidation } from '../validation/schemas/accounting-record-filter-schema';
+import { reqAccountingRecordFilterValidation } from '../validation/accounting-record-filter-validation';
 
 const router = express.Router();
 
 router.get('/count', countAccountingRecords);
-router.post('/create', createAccountingRecord);
-router.delete('/:recordId', deleteAccountingRecord);
+router.post('/create', reqAccountingRecordValidation(accountingRecordSchemaValidation), createAccountingRecord);
+router.delete('/:recordId', reqAccountingRecordIdValidation(idSchemaValidation), deleteAccountingRecord);
 router.get('/all', getAllAccountingRecords); 
-router.get('/:recordId', getAccountingRecord);
-router.post('/filter', getAccountingRecordsByFilter);
-router.put('/:recordId', updateAccountingRecord);
+router.get('/:recordId', reqAccountingRecordIdValidation(idSchemaValidation), getAccountingRecord);
+router.post('/filter', reqAccountingRecordFilterValidation(accountingRecordFilterSchemaValidation), getAccountingRecordsByFilter);
+router.put('/:recordId', reqAccountingRecordIdValidation(idSchemaValidation), reqAccountingRecordValidation(accountingRecordSchemaValidation), updateAccountingRecord);
 
 export default router;
+
+// TODO Make sure that in all handlers are covered cases where there is found nothing to delete/create/uypdate and app won't crash

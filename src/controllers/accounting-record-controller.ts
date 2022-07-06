@@ -45,6 +45,11 @@ export const getAccountingRecord = async ( req: Request, res: Response ) => {
         logger.error(`Failed to fetch accounting record with id: ${recordId}`);
         return res.status(500).json(`Failed to fetch accounting record with id: ${recordId}`);
     }
+    
+    if (Object.keys(record).length === 0) {
+        logger.error(`Accounting record with recordId: ${recordId} was not found`);
+        return res.status(404).json({ message: `Accounting Record with recordId: ${recordId} was not found` });
+    }
 
     logger.info(`Successfully fetched accounting record with id: ${recordId}`);
     return res.status(200).json({ accountingRecord: record, message: `Successfully fetched accounting record with id: ${recordId}` });

@@ -2,11 +2,11 @@ import { Collection, Filter, FindOneAndUpdateOptions, MatchKeysAndValues, Object
 import { connectToDb } from "../database/db-connection";
 import logger from "../loggers/logger";
 import { AccountingRecord } from "../model/accounting-record-model";
-import { AccrountingRecordFilterOptions, BaseRepositoryOperations, UserAccountFilerOptions } from "./base-repository-operations";
+import { AccrountingRecordFilterOptions, BaseRepositoryOperations } from "./base-repository-operations";
 
 export class AccountingRecordRepository implements BaseRepositoryOperations<AccountingRecord> {
 
-    private collection = 'acounting_records';
+    private collection = 'accounting_records';
 
     countRecordsInCollection = async (): Promise<number> => {
         try {
