@@ -53,7 +53,6 @@ export const getAllUserAccounts = async (req: Request, res: Response) => {
 
 export const getUserAccount = async (req: Request, res: Response) => {
     const accountId = req.params.accountId;
-    logger.debug(`accountId: ${accountId}`);
 
     const userAccount: UserAccount = await userAccountRepository.findOneRecord(accountId);
     if (!userAccount) {
