@@ -30,7 +30,7 @@ export const deleteUserAccount = async (req: Request, res: Response) => {
     logger.debug(`userAccountId: ${userAccountId}`);
 
     const deletedAccountId = await userAccountRepository.delete(userAccountId);
-    if (!deletedAccountId) {
+    if (!deletedAccountId || deleteUserAccount === null) {
         logger.error(`Failed to delete user account with id: ${userAccountId}`);
         return res.status(500).json({ message: 'Deleting user account failed' });
     }
@@ -73,9 +73,9 @@ export const getUserAccountByFilter = async (req: Request, res: Response) => {
     const filter: UserAccountFilerOptions = req.body.filter;
 
     const userAccounts: UserAccount[] = await userAccountRepository.findRecordsByFilter(filter);
-    if (!userAccounts) {
-        logger.error('Failed to fetch user accounts by specified filter');
-        return res.status(500).json({ message: 'Failed to fetch user accounts by specified filter' });
+    if (!userAccounts || userAccounts.length === 0) {
+        logger.error('No accounting records found with specified filter');
+        return res.status(404).json({ message: 'No accounting records found with specified filter' });
     }
 
     logger.info('Successfully fetched user accounts by specified filter');
@@ -87,9 +87,9 @@ export const updateUserAccount = async (req: Request, res: Response) => {
     const update: UserAccount = req.body.update;
     
     const updatedUserAccount: UserAccount = await userAccountRepository.updateRecord(accountId, update);
-    if (!updatedUserAccount) {
+    if (!updatedUserAccount || Object.keys(updatedUserAccount).length === 0) {
         logger.error('Failed to update user account');
-        return res.status(500).json({ message: 'Failed to update user account' });
+        return res.status(404).json({ message: 'Failed to update user account' });
     }
 
     logger.info(`Successfully updated user account with username: ${updatedUserAccount.username}`);

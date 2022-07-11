@@ -14,6 +14,7 @@ import { reqAccountIdValidation } from '../validation/accountId-validation';
 import { idSchemaValidation } from '../validation/schemas/id-schema';
 import { userFilterSchemaValidation } from '../validation/schemas/user-filter-schema';
 import { reqAccountFilterValidation } from '../validation/user-filter-validation';
+import { reqUserUpdateValidation } from '../validation/user-update-validation';
 
 const router = express.Router();
 
@@ -23,7 +24,7 @@ router.delete('/:accountId', reqAccountIdValidation(idSchemaValidation), deleteU
 router.get('/all', getAllUserAccounts);
 router.get('/:accountId', reqAccountIdValidation(idSchemaValidation), getUserAccount);
 router.post('/filter', reqAccountFilterValidation(userFilterSchemaValidation), getUserAccountByFilter);
-router.put('/:accountId', reqAccountIdValidation(idSchemaValidation), reqUserValidation(userSchemaValidation), updateUserAccount);
+router.put('/:accountId', reqAccountIdValidation(idSchemaValidation), reqUserUpdateValidation(userSchemaValidation), updateUserAccount);
 
 export default router;
 

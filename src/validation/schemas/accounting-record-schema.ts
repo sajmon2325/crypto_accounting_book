@@ -13,7 +13,7 @@ export const accountingRecordSchemaValidation = {
         cryptoExchangeFee: { type: 'number', nullable: true, minimum: 0 },
         transactionFee: { type: 'number', nullable: true, minimum: 0 },
         createdBy: { type: 'string', minLength: 3, maxLength: 50 },
-        userId: { type: 'string', format: 'uuid' }
+        userId: { type: 'string', pattern:'^[a-f\\d]{24}$', nullable: false, }
     },
     required: ['coinType', 'boughtAt', 'amount', 'purchasingPrice',
      'cryptoExchangeName', 'transactionFiatCurrency', 'createdBy', 'userId'],

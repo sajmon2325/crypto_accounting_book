@@ -40,7 +40,7 @@ export class AccountingRecordRepository implements BaseRepositoryOperations<Acco
         return Promise.reject('Failed to create new accounting record');
     }
 
-    delete = async (recordId: string): Promise<string> =>  {
+    delete = async (recordId: string): Promise<string | null> =>  {
         try {
             const recordsCollection: Collection = await connectToDb(this.collection);
             const existingAccountingRecord = await recordsCollection.findOne<AccountingRecord>( { _id: new ObjectId(recordId) } );
@@ -48,6 +48,8 @@ export class AccountingRecordRepository implements BaseRepositoryOperations<Acco
                 await recordsCollection.deleteOne( { _id: new ObjectId(recordId) } );
                 logger.info(`Successfully deleted record with id: ${recordId}`);
                 return recordId;
+            } else {
+                return null;
             }
         } catch ( e ) {
             if ( e instanceof Error ) {
@@ -99,6 +101,9 @@ export class AccountingRecordRepository implements BaseRepositoryOperations<Acco
             if( accountingRecords.length > 0 ) {
                 logger.info(`Succefully found ${accountingRecords.length} accounting records in database`);
                 return accountingRecords;
+            } else {
+                logger.info(`Found ${accountingRecords.length} accounting records in database`);
+                return accountingRecords;
             }
         } catch ( e ) {
             if ( e instanceof Error ) {
@@ -122,6 +127,9 @@ export class AccountingRecordRepository implements BaseRepositoryOperations<Acco
                 if ( updatedRecord ) {
                     logger.info(`Successfully updated accounting record with id: ${recordId}`);
                     return updatedRecord;
+                } else {
+                    logger.debug(`Failed to update record with id ${recordId}`);
+                    return {} as AccountingRecord;
                 }
             }
         } catch ( e ) {

@@ -3,10 +3,10 @@ import { ajv } from './ajv-instance';
 import logger from '../loggers/logger';
 
 
-export const reqAccountingRecordValidation = (accountingRecordSchema: object) => {
+export const reqAccountingRecordUpdateValidation = (accountingRecordSchema: object) => {
     return (req: Request, res: Response, next: NextFunction) => {
         const isValid = ajv.compile(accountingRecordSchema);
-        const valid = isValid(req.body.accountingRecord);
+        const valid = isValid(req.body.update);
 
         if (!valid) {
             const errors = isValid.errors;
