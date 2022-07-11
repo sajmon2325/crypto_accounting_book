@@ -1,12 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
+import { UserSchema } from './schemas/user-schema';
+import { JSONSchemaType } from 'ajv';
 import { ajv } from './ajv-instance';
 import logger from '../loggers/logger';
 
 
-export const reqAccountingRecordValidation = (accountingRecordSchema: object) => {
+export const reqUserUpdateValidation = (userSchema: JSONSchemaType<UserSchema>) => {
     return (req: Request, res: Response, next: NextFunction) => {
-        const isValid = ajv.compile(accountingRecordSchema);
-        const valid = isValid(req.body.accountingRecord);
+        const isValid = ajv.compile<UserSchema>(userSchema);
+        const valid = isValid(req.body.update);
 
         if (!valid) {
             const errors = isValid.errors;

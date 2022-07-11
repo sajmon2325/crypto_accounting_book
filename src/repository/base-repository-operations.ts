@@ -23,7 +23,7 @@ export interface BaseRepositoryOperations<T> {
 
     updateRecord ( id: string, item: T ): Promise<T>;
 
-    delete ( id: string ): Promise<string>;
+    delete ( id: string ): Promise<string | null>;
 
     findOneRecord ( id: string ): Promise<T>;
 

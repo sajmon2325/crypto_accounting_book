@@ -40,7 +40,7 @@ export class UserAccountRepository implements BaseRepositoryOperations<UserAccou
         return Promise.reject( 'Failed to create new user account' );
     }
 
-    delete = async ( accountId: string ): Promise<string> => {
+    delete = async ( accountId: string ): Promise<string | null> => {
         try {
             const accountCollection: Collection = await connectToDb( this.collection );
             const existingUserAccount = await accountCollection.findOne<UserAccount>( { _id: new ObjectId(accountId) } );
@@ -49,6 +49,8 @@ export class UserAccountRepository implements BaseRepositoryOperations<UserAccou
                 await accountCollection.deleteOne( { _id: new ObjectId(accountId) } );
                 logger.info( `Successfully deleted record with id: ${ accountId }` );
                 return accountId;
+            } else {
+                return null;
             }
         } catch ( e ) {
             if ( e instanceof Error ) {
@@ -109,6 +111,9 @@ export class UserAccountRepository implements BaseRepositoryOperations<UserAccou
             if ( userAccounts.length > 0 ) {
                 logger.info( `Successfully found ${ userAccounts.length } user accounts in database` );
                 return userAccounts;
+            } else {
+                logger.info(`Found ${userAccounts.length} accounting records in database`);
+                return userAccounts;
             }
         } catch ( e ) {
             if ( e instanceof Error ) {
@@ -131,8 +136,11 @@ export class UserAccountRepository implements BaseRepositoryOperations<UserAccou
                 const updatedUserAccount = await accountsCollection.findOne<UserAccount>({_id: new ObjectId(accountId)});
 
                 if (  updatedUserAccount ) {
-                    logger.info( `Successfully updated record with id: ${ accountId }` );
+                    logger.debug( `Successfully updated record with id: ${ accountId }` );
                     return updatedUserAccount;
+                } else {
+                    logger.debug(`Failed to update record with id ${accountId}`);
+                    return {} as UserAccount;
                 }
             }
         } catch ( e ) {
