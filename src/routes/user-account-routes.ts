@@ -27,5 +27,3 @@ router.post('/filter', reqAccountFilterValidation(userFilterSchemaValidation), g
 router.put('/:accountId', reqAccountIdValidation(idSchemaValidation), reqUserUpdateValidation(userSchemaValidation), updateUserAccount);
 
 export default router;
-
-// TODO Make sure that in all handlers are covered cases where there is found nothing to delete/create/uypdate and app won't crash

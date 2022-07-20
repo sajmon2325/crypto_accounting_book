@@ -27,5 +27,3 @@ router.post('/filter', reqAccountingRecordFilterValidation(accountingRecordFilte
 router.put('/:recordId', reqAccountingRecordIdValidation(idSchemaValidation), reqAccountingRecordUpdateValidation(accountingRecordSchemaValidation), updateAccountingRecord);
 
 export default router;
-
-// TODO Make sure that in all handlers are covered cases where there is found nothing to delete/create/uypdate and app won't crash
