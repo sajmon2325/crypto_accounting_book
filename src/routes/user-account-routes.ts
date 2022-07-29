@@ -15,15 +15,16 @@ import { idSchemaValidation } from '../validation/schemas/id-schema';
 import { userFilterSchemaValidation } from '../validation/schemas/user-filter-schema';
 import { reqAccountFilterValidation } from '../validation/user-filter-validation';
 import { reqUserUpdateValidation } from '../validation/user-update-validation';
+import { jwtValidator } from '../middleware/jws-validator';
 
 const router = express.Router();
 
-router.get('/count', countUserAccounts);
-router.post('/create', reqUserValidation(userSchemaValidation), createUserAccount);
-router.delete('/:accountId', reqAccountIdValidation(idSchemaValidation), deleteUserAccount);
-router.get('/all', getAllUserAccounts);
-router.get('/:accountId', reqAccountIdValidation(idSchemaValidation), getUserAccount);
-router.post('/filter', reqAccountFilterValidation(userFilterSchemaValidation), getUserAccountByFilter);
-router.put('/:accountId', reqAccountIdValidation(idSchemaValidation), reqUserUpdateValidation(userSchemaValidation), updateUserAccount);
+router.get('/count', jwtValidator, countUserAccounts);
+router.post('/create', jwtValidator, reqUserValidation(userSchemaValidation), createUserAccount);
+router.delete('/:accountId', jwtValidator, reqAccountIdValidation(idSchemaValidation), deleteUserAccount);
+router.get('/all', jwtValidator, getAllUserAccounts);
+router.get('/:accountId', jwtValidator, reqAccountIdValidation(idSchemaValidation), getUserAccount);
+router.post('/filter', jwtValidator, reqAccountFilterValidation(userFilterSchemaValidation), getUserAccountByFilter);
+router.put('/:accountId', jwtValidator, reqAccountIdValidation(idSchemaValidation), reqUserUpdateValidation(userSchemaValidation), updateUserAccount);
 
 export default router;
