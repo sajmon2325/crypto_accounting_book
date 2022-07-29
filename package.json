@@ -21,19 +21,25 @@
   "devDependencies": {
     "@types/ajv": "^1.0.0",
     "@types/body-parser": "^1.19.2",
+    "@types/cookie-parser": "^1.4.3",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.13",
+    "@types/jsonwebtoken": "^8.5.8",
     "@types/mongodb": "^4.0.7",
     "@types/node": "^17.0.21",
     "@types/uuid": "^8.3.4",
-    "prettier": "^2.5.1"
+    "prettier": "^2.5.1",
+    "tsconfig-paths": "^4.0.0"
   },
   "dependencies": {
     "ajv": "^8.11.0",
     "ajv-formats": "^2.1.1",
+    "bcrypt": "^5.0.1",
     "body-parser": "^1.19.2",
+    "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
+    "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.5.0",
     "ts-node-dev": "^1.1.8",
     "uuid": "^8.3.2",

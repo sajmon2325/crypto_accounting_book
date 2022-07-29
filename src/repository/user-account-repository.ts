@@ -83,7 +83,7 @@ export class UserAccountRepository implements BaseRepositoryOperations<UserAccou
             const accountsCollection: Collection = await connectToDb( this.collection );
             const foundUserAccount = await accountsCollection.findOne<UserAccount>( { _id: new ObjectId(accountId) } );
             logger.debug(`accountId: ${accountId}`);
-            logger.debug(`foundUserAccount: ${foundUserAccount}`);
+            logger.debug(`foundUserAccount: ${JSON.stringify(foundUserAccount)}`);
 
             if ( foundUserAccount ) {
                 logger.info( `Successfully found user account with id: ${ accountId }` );
@@ -103,6 +103,32 @@ export class UserAccountRepository implements BaseRepositoryOperations<UserAccou
 
         return Promise.reject( 'Failed to find specified user account' );
     }
+
+    findRecordByUsername = async ( username: string ): Promise<UserAccount> => {
+        try {
+            const accountsCollection: Collection = await connectToDb( this.collection );
+            const foundUserAccount = await accountsCollection.findOne<UserAccount>( { username: username } );
+            logger.debug(`username: ${username}`);
+            logger.debug(`foundUserAccount: ${JSON.stringify(foundUserAccount)}`);
+
+            if ( foundUserAccount ) {
+                logger.info( `Successfully found user account with username: ${ username }` );
+                return foundUserAccount;
+            }
+
+            if ( !foundUserAccount ) {
+                logger.info(`Record with username: ${username} was not found`);
+                return {} as UserAccount;
+            }
+        } catch ( e ) {
+            if ( e instanceof Error ) {
+                logger.error( e.stack );
+                throw new Error( e.message );
+            }
+        }
+
+        return Promise.reject( 'Failed to find specified user account' );
+    };
 
     findRecordsByFilter = async ( filter: UserAccountFilerOptions ): Promise<UserAccount[]> => {
         try {

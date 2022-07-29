@@ -15,17 +15,16 @@ import { idSchemaValidation } from '../validation/schemas/id-schema';
 import { accountingRecordFilterSchemaValidation } from '../validation/schemas/accounting-record-filter-schema';
 import { reqAccountingRecordFilterValidation } from '../validation/accounting-record-filter-validation';
 import { reqAccountingRecordUpdateValidation } from '../validation/accounting-record-update-validation';
+import { jwtValidator } from '../middleware/jws-validator';
 
 const router = express.Router();
 
-router.get('/count', countAccountingRecords);
-router.post('/create', reqAccountingRecordValidation(accountingRecordSchemaValidation), createAccountingRecord);
-router.delete('/:recordId', reqAccountingRecordIdValidation(idSchemaValidation), deleteAccountingRecord);
-router.get('/all', getAllAccountingRecords); 
-router.get('/:recordId', reqAccountingRecordIdValidation(idSchemaValidation), getAccountingRecord);
-router.post('/filter', reqAccountingRecordFilterValidation(accountingRecordFilterSchemaValidation), getAccountingRecordsByFilter);
-router.put('/:recordId', reqAccountingRecordIdValidation(idSchemaValidation), reqAccountingRecordUpdateValidation(accountingRecordSchemaValidation), updateAccountingRecord);
+router.get('/count', jwtValidator, countAccountingRecords);
+router.post('/create', jwtValidator, reqAccountingRecordValidation(accountingRecordSchemaValidation), createAccountingRecord);
+router.delete('/:recordId', jwtValidator, reqAccountingRecordIdValidation(idSchemaValidation), deleteAccountingRecord);
+router.get('/all', jwtValidator, getAllAccountingRecords); 
+router.get('/:recordId', jwtValidator, reqAccountingRecordIdValidation(idSchemaValidation), getAccountingRecord);
+router.post('/filter', jwtValidator, reqAccountingRecordFilterValidation(accountingRecordFilterSchemaValidation), getAccountingRecordsByFilter);
+router.put('/:recordId', jwtValidator, reqAccountingRecordIdValidation(idSchemaValidation), reqAccountingRecordUpdateValidation(accountingRecordSchemaValidation), updateAccountingRecord);
 
 export default router;
-
-// TODO Make sure that in all handlers are covered cases where there is found nothing to delete/create/uypdate and app won't crash
