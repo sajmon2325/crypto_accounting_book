@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import logger from '../loggers/logger';
+import bcrypt from 'bcrypt';
 import { UserAccount, UserAccountAttributes } from '../model/userAccount-model';
 import { UserAccountFilerOptions } from '../repository/base-repository-operations';
 import { UserAccountRepository } from '../repository/user-account-repository';
@@ -14,6 +15,14 @@ export const countUserAccounts = async (req: Request, res: Response) => {
 
 export const createUserAccount = async (req: Request, res: Response) => {
     const userAccToCreate: UserAccountAttributes = req.body.userAccount;
+    const encryptedPassword = await encryptPassword(userAccToCreate.password);
+
+    if (!encryptedPassword || encryptedPassword instanceof Error) {
+        logger.error(`Failed to encrypt password for user: ${userAccToCreate.username}`);
+        throw new Error(`Failed to encrypt password for user: ${userAccToCreate.username}`);
+    } else {
+        userAccToCreate.password = encryptedPassword;
+    }
 
     const createdUserAccount: UserAccount = await userAccountRepository.createRecord(userAccToCreate);
     if (!createdUserAccount) {
@@ -95,3 +104,17 @@ export const updateUserAccount = async (req: Request, res: Response) => {
     logger.info(`Successfully updated user account with username: ${updatedUserAccount.username}`);
     return res.status(200).json({ updatedUserAccount: updatedUserAccount, message: `Successfully updated user account with username: ${updatedUserAccount.username}` });
 };
+
+const encryptPassword = async (password: string) => {
+    const saltRounds = 10;
+    try {
+        const encryptedPassword = await bcrypt.hash(password, saltRounds);
+        logger.info(`Password encryptes successfully: ${password}`);
+        return encryptedPassword;
+    } catch (e) {
+        if (e instanceof Error) {
+            logger.error('Failed to hash password');
+            return new Error(`Failed to encrypt password, ${e.message}`);
+        }
+    }
+}
