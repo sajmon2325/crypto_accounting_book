@@ -4,6 +4,8 @@ import { UserAccount } from '../model/userAccount-model';
 import { UserAccountRepository } from '../repository/user-account-repository';
 import jwt, { SignOptions } from 'jsonwebtoken';
 import { JWT_CONFIG } from '../config/jwt-config';
+import bcrypt from 'bcrypt';
+
 
 const userAccountRepository = new UserAccountRepository();
 
@@ -50,7 +52,8 @@ const verifyUserExists = (user: UserAccount) => {
 };
 
 const verifyCredentials = async (user: UserAccount, password: string, email: string ) => {
-    if (user.password !== password || user.email !== email) {
+    const validPassord = await bcrypt.compare(password, user.password);
+    if (!validPassord || user.email !== email) {
         return false;
     } else {
         return true;
