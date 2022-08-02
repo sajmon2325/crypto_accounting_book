@@ -41,7 +41,12 @@ export const logInUser = async ( req: Request, res: Response ) => {
     res.status(200).cookie('token', token, { maxAge: JWT_CONFIG.jwtExpirySeconds * 1000 }).send({ token: token });
 };
 
-export const logOutUser = async ( req: Request, res: Response ) => {};
+export const logOutUser = async ( req: Request, res: Response ) => {
+    // there is no way how can and API from server force client to delete a cookie 
+    // but you can invalidate it by setting the expiration time to very small value
+    logger.info(`Log out request has been sent`);
+    res.status(200).cookie('token', '', { maxAge: 1 }).send({ message: 'Log out has been successfull' });
+};
 
 const verifyUserExists = (user: UserAccount) => {
     if (!user || Object.keys(user).length === 0) {
